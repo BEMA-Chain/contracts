@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "ipfs-core-utils·;
 
 contract BemaMusic is ERC1155, Ownable {
     using Counters for Counters.Counter;

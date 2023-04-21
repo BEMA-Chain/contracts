@@ -33,3 +33,12 @@ npx hardhat node
 npx hardhat run scripts/deploy.js --network polygon
 
 ```
+
+Docker: Build
+
+```
+docker build -t bema-contracts .
+
+docker run -p 3000:3000 bema-contracts
+
+```
