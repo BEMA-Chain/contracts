@@ -1,4 +1,5 @@
 # Bema Hardhat Project
+<<<<<<< HEAD
 
 1. Management Technologies.
     Link Drive: https://docs.google.com/document/d/1G-zssV_tvCEW-e6lIh5Cs226UHwrP4p41Yjl2j3AXao/edit?usp=share_link
@@ -9,6 +10,12 @@
 4. Solution System: Building.
 5. Testing Smart Contracts (Plan Actions)
 6. Provide the corresponding Scripts to use the backend area
+=======
+
+
+
+Try running some of the following tasks:
+>>>>>>> 14bee600e7abe561005c3369011407fc79daaf69
 
 ```shell
 npx hardhat help
