@@ -5,7 +5,8 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "ipfs-core-utils";
+//import "ipfs-core-utils";
+
 
 contract BemaMusic is ERC1155, Ownable {
     using Counters for Counters.Counter;
@@ -44,14 +45,14 @@ contract BemaMusic is ERC1155, Ownable {
     constructor(
         // string memory _tokenURI,
         uint256 _mintFee
-    ) ERC1155("https://bemachain.com/api/item/{id}.json") {
+    ) ERC1155("https://BemaMusic.com/api/item/{id}.json") {
         // tokenURI = _tokenURI;
         mintFee = _mintFee;
         _mint(msg.sender, 0, 100000000000 ether, "");
     }
 
     // Function to create a new ERC-1155 token for a project/song
-    function createToken(
+    function createSong(
         SongDetails memory _songDetails
     ) public payable returns (uint256) {
         //checkes if the required mint fee was sent
@@ -84,6 +85,7 @@ contract BemaMusic is ERC1155, Ownable {
     function getSongData(uint256 tokenId) public view returns (Song memory) {
         return _songData[tokenId];
     }
+    
 
     // Function to update project/song information for a given token ID
     function updateSongData(
@@ -170,6 +172,28 @@ contract BemaMusic is ERC1155, Ownable {
         IERC20 token = IERC20(tokenAddress);
         token.transfer(msg.sender, token.balanceOf(address(this)));
     }
+    // Función que permite al usuario comprar un token
+   /*  function buyToken(uint256 _tokenId) public payable {
+        require(msg.value >= tokenPrice, "Insufficient funds");
+        require(tokenIdToSong[_tokenId].id != 0, "Invalid token ID");
+        // Verificar que el usuario recibe el token correcto
+        require(msg.sender == tokenIdToSong[_tokenId].owner, "Invalid owner");
+        // Enviar el Ether al propietario del token
+        tokenIdToSong[_tokenId].owner.transfer(msg.value);
+        // Transferir el token al comprador
+        tokenIdToSong[_tokenId].owner = msg.sender;
+        emit Transfer(tokenIdToSong[_tokenId].owner, msg.sender, _tokenId);
+    }
+ */
+    // Función que permite al propietario del token venderlo
+   /*  function sellToken(uint256 _tokenId, uint256 _price) public {
+        require(tokenIdToSong[_tokenId].owner == msg.sender, "Invalid owner");
+        // Verificar que el precio no sea cero
+        require(_price > 0, "Price must be greater than zero");
+        tokenIdToSong[_tokenId].price = _price;
+        emit TokenForSale(_tokenId, _price);
+    } */
+
 
     // Event to signal that the Song data has been created
     event SongDataCreated(

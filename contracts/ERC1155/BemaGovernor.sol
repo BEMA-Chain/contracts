@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-import "@openzeppelin/contracts-upgradeable/governance/GovernorUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/governance/extensions/GovernorSettingsUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/governance/extensions/GovernorCountingSimpleUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/governance/extensions/GovernorVotesUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/governance/extensions/GovernorVotesQuorumFractionUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/governance/extensions/GovernorTimelockControlUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/governance/GovernorUpgradeable.sol";
+import "@openzeppelin/contracts/governance/extensions/GovernorSettingsUpgradeable.sol";
+import "@openzeppelin/contracts/governance/extensions/GovernorCountingSimpleUpgradeable.sol";
+import "@openzeppelin/contracts/governance/extensions/GovernorVotesUpgradeable.sol";
+import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFractionUpgradeable.sol";
+import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControlUpgradeable.sol";
+import "@openzeppelin/proxy/utils/Initializable.sol";
 
 contract BemaGovernor is Initializable, GovernorUpgradeable, GovernorSettingsUpgradeable, GovernorCountingSimpleUpgradeable, GovernorVotesUpgradeable, GovernorVotesQuorumFractionUpgradeable, GovernorTimelockControlUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor

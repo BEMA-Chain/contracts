@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
 contract BemaRewards {
     mapping(address => uint256) public userPoints;
     uint256 public pointsPerMinute = 500;

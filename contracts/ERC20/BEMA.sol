@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v4.3/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v4.3/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v4.3/contracts/token/ERC20/utils/SafeERC20.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/SafeMath.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v4.3/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract BemaToken is IERC20, Ownable, ReentrancyGuard {
     using SafeMath for uint256;
@@ -18,6 +18,9 @@ contract BemaToken is IERC20, Ownable, ReentrancyGuard {
     
     mapping (address => uint256) private _balances;
     mapping (address => mapping (address => uint256)) private _allowances;
+    // A mapping to keep track of approved token transfers
+    mapping (uint256 => address) private tokenApprovals;
+
     
     constructor() {
         _balances[msg.sender] = _totalSupply;
@@ -47,15 +50,63 @@ contract BemaToken is IERC20, Ownable, ReentrancyGuard {
         return _allowances[owner][spender];
     }
 
-    function approve(address spender, uint256 amount) public override returns (bool) {
-        _approve(msg.sender, spender, amount);
-        return true;
+    function approve(address _to, uint256 _tokenId) public {
+        // Verify that the caller is the owner of the token
+        require(tokenIdToSong[_tokenId].owner == msg.sender, "Invalid owner");
+
+        // Approve the transfer
+        tokenApprovals[_tokenId] = _to;
+
+        // Emit an Approval event
+        emit Approval(tokenIdToSong[_tokenId].owner, _to, _tokenId);
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
-        _transfer(sender, recipient, amount);
-        _approve(sender, msg.sender, _allowances[sender][msg.sender].sub(amount, "ERC20: transfer amount exceeds allowance"));
-        return true;
+    // Function to transfer ownership of a token
+    function transferFrom(address _from, address _to, uint256 _tokenId) public {
+        // Verify that the transfer is approved
+        require(tokenApprovals[_tokenId] == _to, "Transfer not approved");
+
+        // Verify that the owner of the token is _from
+        require(tokenIdToSong[_tokenId].owner == _from, "Invalid owner");
+
+        // Transfer ownership of the token
+        tokenIdToSong[_tokenId].owner = _to;
+
+        // Clear the approval
+        delete tokenApprovals[_tokenId];
+
+        // Emit a Transfer event
+        emit Transfer(_from, _to, _tokenId);
+    }
+    // Function that allows a user to buy a token
+    function buyToken(uint256 _tokenId) public payable {
+        // Verify that the user has sent enough Ether to purchase the token
+        require(msg.value >= tokenIdToSong[_tokenId].price, "Insufficient funds");
+
+        // Verify that the token is valid and is owned by the seller
+        require(tokenIdToSong[_tokenId].id != 0, "Invalid token ID");
+        require(tokenIdToSong[_tokenId].owner != msg.sender, "You already own this token");
+
+        // Transfer ownership of the token from the seller to the buyer
+        transferFrom(tokenIdToSong[_tokenId].owner, msg.sender, _tokenId);
+
+        // Transfer the Ether to the seller
+        tokenIdToSong[_tokenId].owner.transfer(msg.value);
+    }
+
+    // Function that allows the owner of a token to put it up for sale
+    function sellToken(uint256 _tokenId, uint256 _price) public {
+        // Verify that the caller is the owner of the token
+        require(tokenIdToSong[_tokenId].owner == msg.sender, "Invalid owner");
+
+        // Verify that the price is greater than zero
+        require(_price > 0, "Price must be greater than zero");
+
+        // Set the price of the token
+        tokenIdToSong[_tokenId].price = _price;
+
+        // Emit a TokenForSale event
+        emit TokenForSale(_tokenId, _price);
     }
 
     function increaseAllowance(address spender, uint256 addedValue) public returns (bool) {
