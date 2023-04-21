@@ -2,8 +2,12 @@
 pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-contract BemaRewards {
+
+contract BemaRewards is ReentrancyGuard{
+    using SafeMath for uint256; // Add this line
+
     mapping(address => uint256) public userPoints;
     uint256 public pointsPerMinute = 500;
     uint256 public pointsPerPlaylist = 1000;
@@ -15,6 +19,8 @@ contract BemaRewards {
     uint256 public pointsPerReport = 25000;
     uint256 public pointsPerFeature = 50000;
     uint256 public pointsToBemaCoinConversion = 1000;
+    
+       
 
     function streamMusic(uint256 minutesStreamed) public {
         uint256 pointsEarned = minutesStreamed * pointsPerMinute;
@@ -57,8 +63,7 @@ contract BemaRewards {
 
     function convertPointsToBemaCoin() public view returns (uint256) {
         uint256 totalPoints = userPoints[msg.sender];
-        uint256 bemaCoinEarned = totalPoints / pointsToBemaCoinConversion;
-        return bemaCoinEarned;
+        return totalPoints / pointsToBemaCoinConversion;
     }
 
     function calculateDailyPointsEarned() public view returns (uint256) {
@@ -72,5 +77,14 @@ contract BemaRewards {
         pointsEarned += pointsPerEvent; // Participating in a community event
         pointsEarned += pointsPerFeature; // Submitting a feature suggestion that is implemented
         return pointsEarned;
+    }
+    
+    function redeemPoints(uint256 pointsToRedeem) public nonReentrant {
+        require(userPoints[msg.sender] >= pointsToRedeem, "Not enough points to redeem.");
+
+        userPoints[msg.sender] -= pointsToRedeem;
+
+        // transfer BemaCoins or other incentives to the user's address
+        // code to transfer BemaCoins or other incentives
     }
 }
