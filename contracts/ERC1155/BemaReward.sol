@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.9;
 
 contract BemaRewards {
     mapping(address => uint256) public userPoints;
@@ -13,37 +13,37 @@ contract BemaRewards {
     uint256 public pointsPerReport = 25000;
     uint256 public pointsPerFeature = 50000;
     uint256 public pointsToBemaCoinConversion = 1000;
-    
+
     function streamMusic(uint256 minutesStreamed) public {
         uint256 pointsEarned = minutesStreamed * pointsPerMinute;
         userPoints[msg.sender] += pointsEarned;
     }
-    
+
     function createPlaylist() public {
         userPoints[msg.sender] += pointsPerPlaylist;
     }
-    
+
     function shareContent() public {
         userPoints[msg.sender] += pointsPerShare;
     }
-    
+
     function inviteNewUser(address newUser) public {
         userPoints[msg.sender] += pointsPerNewUser;
         userPoints[newUser] += pointsPerNewUser;
     }
-    
+
     function interact() public {
         userPoints[msg.sender] += pointsPerInteraction;
     }
-    
+
     function discoverNewMusic() public {
         userPoints[msg.sender] += pointsPerWeek;
     }
-    
+
     function participateInEvent() public {
         userPoints[msg.sender] += pointsPerEvent;
     }
-    
+
     function contributeToPlatform(bool report, bool featureImplemented) public {
         if (report) {
             userPoints[msg.sender] += pointsPerReport;
@@ -52,13 +52,13 @@ contract BemaRewards {
             userPoints[msg.sender] += pointsPerFeature;
         }
     }
-    
+
     function convertPointsToBemaCoin() public view returns (uint256) {
         uint256 totalPoints = userPoints[msg.sender];
         uint256 bemaCoinEarned = totalPoints / pointsToBemaCoinConversion;
         return bemaCoinEarned;
     }
-    
+
     function calculateDailyPointsEarned() public view returns (uint256) {
         uint256 pointsEarned = 0;
         pointsEarned += 24 * 60 * pointsPerMinute; // Streaming music for 1 hour
@@ -72,4 +72,3 @@ contract BemaRewards {
         return pointsEarned;
     }
 }
-

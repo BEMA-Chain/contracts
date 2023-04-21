@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract BemaChain is ERC1155, Ownable {
+contract BemaMusic is ERC1155, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     uint256 public mintFee;
@@ -50,7 +50,9 @@ contract BemaChain is ERC1155, Ownable {
     }
 
     // Function to create a new ERC-1155 token for a project/song
-    function createToken(SongDetails memory _songDetails) public payable returns (uint256) {
+    function createToken(
+        SongDetails memory _songDetails
+    ) public payable returns (uint256) {
         //checkes if the required mint fee was sent
         require(msg.value == mintFee, "Wrong Amount Sent");
         (bool success, ) = payable(Ownable.owner()).call{value: msg.value}("");
@@ -68,7 +70,11 @@ contract BemaChain is ERC1155, Ownable {
         // Mint new ERC-1155 token to the contract creator
         _mint(msg.sender, newItemId, 1, "");
 
-        emit SongDataCreated(newItemId, _songData[newItemId].SongDetails, msg.sender);
+        emit SongDataCreated(
+            newItemId,
+            _songData[newItemId].SongDetails,
+            msg.sender
+        );
 
         // Return the new token ID
         return newItemId;
@@ -79,10 +85,16 @@ contract BemaChain is ERC1155, Ownable {
     }
 
     // Function to update project/song information for a given token ID
-    function updateSongData(uint256 tokenId, SongDetails memory _songDetails) public {
+    function updateSongData(
+        uint256 tokenId,
+        SongDetails memory _songDetails
+    ) public {
         // require(_songData[tokenId].artistEmailAddress != address(0), "Token does not exist");
         require(_songData[tokenId].tokenExist, "Token does not exist");
-        require(_songData[tokenId].Owner == msg.sender, "Unauthorized to update song data");
+        require(
+            _songData[tokenId].Owner == msg.sender,
+            "Unauthorized to update song data"
+        );
         _songData[tokenId].SongDetails = _songDetails;
 
         // Emit event to signal that the Song data has been updated
@@ -159,7 +171,11 @@ contract BemaChain is ERC1155, Ownable {
     }
 
     // Event to signal that the Song data has been created
-    event SongDataCreated(uint256 tokenId, SongDetails _SongDetails, address Owner);
+    event SongDataCreated(
+        uint256 tokenId,
+        SongDetails _SongDetails,
+        address Owner
+    );
 
     // Event to signal that the Song data has been updated
     event SongDataUpdated(uint256 tokenId);
