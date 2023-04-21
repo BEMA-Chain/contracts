@@ -13,7 +13,7 @@ contract BemaToken is IERC20, Ownable, ReentrancyGuard {
     string private _name = "BemaToken";
     string private _symbol = "BEMA";
     uint8 private _decimals = 18;
-    uint256 private _totalSupply = 100000000 * (10 ** uint256(_decimals));
+    uint256 private _totalSupply = 200000000 * (10 ** uint256(_decimals));
     address private _burnAddress = 0x000000000000000000000000000000000000dEaD;
     
     mapping (address => uint256) private _balances;
