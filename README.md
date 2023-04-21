@@ -24,6 +24,11 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.js
 ```
+Token: ERC-20 Test
+```
+BemaToken Contract: 0xFd7342030374CE6Ae765033f48DE477E11d73bd2
+Link BemaToken: https://mumbai.polygonscan.com/token/0xfd7342030374ce6ae765033f48de477e11d73bd2
+```
 Note: Console
 ```Compile: npx hardhat compile
 test: npx hardhat test
