@@ -1,6 +1,6 @@
-# Sample Hardhat Project
+# Bema Hardhat Project
 
-Create an multiple script to generato sync with the backend area, IPFS, Upload Mp4, Conect with Metamask, doker-compose.yaml, testing & deploy.
+
 
 Try running some of the following tasks:
 
