@@ -14,8 +14,7 @@ RUN npm install
 # Copy the rest of the application to the container
 COPY . .
 
-# Copy the hardhat.config.js file to the container
-COPY hardhat.config.js ./
+
 
 # Set up the environment variables
 ARG NETWORK=polygon
@@ -24,7 +23,7 @@ ENV POLYGON_NETWORK=$NETWORK
 ENV INFURA_PROJECT_ID=$INFURA_PROJECT_ID
 
 # Build the application
-RUN npx hardhat compile
+#RUN npx hardhat compile
 
 # Expose the port that the application will be running on
 EXPOSE 3000

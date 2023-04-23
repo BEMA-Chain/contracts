@@ -30,7 +30,7 @@ BemaToken Contract: 0xFd7342030374CE6Ae765033f48DE477E11d73bd2
 
 Link BemaToken: https://mumbai.polygonscan.com/token/0xfd7342030374ce6ae765033f48de477e11d73bd2
 
-Token Governor: ERC721
+Token Governor: ERC20
 
 Note: Console
 ```Compile: npx hardhat compile
@@ -48,5 +48,8 @@ Docker: Build
 docker build -t bema-contracts .
 
 docker run -p 3000:3000 bema-contracts
+
+npx hardhat compile --network docker
+
 
 ```

@@ -1,3 +1,4 @@
+require("@nomiclabs/hardhat-docker");
 require("@nomicfoundation/hardhat-toolbox");
 require('@openzeppelin/hardhat-upgrades');
 require("@nomiclabs/hardhat-waffle")
@@ -8,62 +9,78 @@ require("hardhat-gas-reporter")
 require("hardhat-contract-sizer")
 require("dotenv").config()
 
-/** @type import('hardhat/config').HardhatUserConfig */
-
-
 const COINMARKET_API_KEY = process.env.COINMARKET_API_KEY || "key"
 const MAINNET_RPC_URL = process.env.MAINNET_RPC_URL || "key"
 const MUMBAI_RPC_URL = process.env.MUMBAI_RPC_URL || "key"
 const POLYSCAN_API_KEY = process.env.POLYSCAN_API_KEY || "key"
 
+/**
+ * @type import('hardhat/config').HardhatUserConfig
+ */
 module.exports = {
-    solidity: {
-        compilers: [{ version: "0.8.18" }],
+  solidity: {
+    compilers: [{ version: "0.8.18" }],
+  },
+  defaultNetwork: "hardhat",
+  docker: {
+    enabled: true,
+    image: "ethereum/client-go:latest",
+    args: ["--datadir", "/eth-testnet-data"],
+    ports: ["8545:8545"],
+    cmd: ["--http", "--http.addr", "0.0.0.0", "--http.api", "eth,net,web3,personal"]
+  },
+  networks: {
+    hardhat: {
+      chainId: 80001,
+      // forking: {
+      //   url: MAINNET_RPC_URL,
+      // },
     },
-    defaultNetwork: "hardhat",
-    networks: {
-        hardhat: {
-            chainId: 80001,
-            // forking: {
-            //     url: MAINNET_RPC_URL,
-            // },
-        },
-        localhost: {
-            chainId: 31337,
-        },
-        mumbai: {
-            url: MUMBAI_RPC_URL,
-            accounts: [PRIVATE_KEY],
-            chainId: 80001,
-            blockConfirmations: 1,
-        },
-        mainnet: {
-            url: MAINNET_RPC_URL,
-            accounts: [PRIVATE_KEY],
-            chainId: 1,
-            blockConfirmations: 1,
-        },
+    localhost: {
+      chainId: 31337,
     },
-
-    namedAccounts: {
-        deployer: {
-            default: 0,
-        },
-        user: {
-            default: 1,
-        },
+    mumbai: {
+      url: MUMBAI_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 80001,
+      blockConfirmations: 1,
     },
-
-    mocha: {
-        timeout: 300000, // 300 sec max
+    mainnet: {
+      url: MAINNET_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 1,
+      blockConfirmations: 1,
     },
-
-    etherscan: {
-        apiKey: POLYSCAN_API_KEY,
+  },
+  namedAccounts: {
+    deployer: {
+      default: 0,
     },
-    // polyscan: {
-    //     apiKey: POLYSCAN_API_KEY,
-    // },
-}
-
-
+    user: {
+      default: 1,
+    },
+  },
+  mocha: {
+    timeout: 300000, // 300 sec max
+  },
+  etherscan: {
+    apiKey: POLYSCAN_API_KEY,
+  },
+  // polyscan: {
+  //     apiKey: POLYSCAN_API_KEY,
+  // },
+  gasReporter: {
+    currency: "USD",
+    coinmarketcap: COINMARKET_API_KEY,
+    enabled: process.env.REPORT_GAS === "true",
+  },
+  contractSizer: {
+    alphaSort: true,
+    runOnCompile: true,
+    disambiguatePaths: false,
+  },
+  solidityCoverage: {
+    defaultSolcoverjs: "./test/solcover.js",
+    ignoreFiles: ["mocks/", "test/", "lib/"],
+  },
+};
